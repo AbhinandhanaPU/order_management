@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:order_management/controllers/cart_controller.dart';
 import 'package:order_management/models/product_model.dart';
 
 class ProductListItem extends StatelessWidget {
@@ -13,6 +15,8 @@ class ProductListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final CartController cartController = Get.find<CartController>();
+
     return Container(
       margin: EdgeInsets.all(10),
       padding: EdgeInsets.all(10),
@@ -53,14 +57,37 @@ class ProductListItem extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              FilledButton.icon(
-                onPressed: addToCart,
-                label: Text(
-                  'Add to Cart',
-                  style: TextStyle(fontSize: 15),
-                ),
-                icon: Icon(Icons.add_shopping_cart_sharp),
-              )
+              Obx(
+                () {
+                  bool isCarted = cartController.cartItems.containsKey(product);
+                  return isCarted
+                      ? Container(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 15,
+                            vertical: 10,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.green,
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Text(
+                            "In Cart",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        )
+                      : FilledButton.icon(
+                          onPressed: addToCart,
+                          label: Text(
+                            'Add to Cart',
+                            style: TextStyle(fontSize: 15),
+                          ),
+                          icon: Icon(Icons.add_shopping_cart_sharp),
+                        );
+                },
+              ),
             ],
           ),
         ],

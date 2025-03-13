@@ -4,7 +4,7 @@ class ProductModel {
   final String id;
   final String name;
   final int stock;
-  final double price;
+  final int price;
   final String image;
 
   ProductModel({
@@ -20,7 +20,7 @@ class ProductModel {
       id: json['id'],
       name: json['name'],
       stock: json['stock'],
-      price: (json['price'] as num).toDouble(),
+      price: (json['price'] as num).toInt(),
       image: json['image'],
     );
   }

@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:order_management/controllers/cart_controller.dart';
+import 'package:order_management/models/product_model.dart';
 
 class OrderPlacementScreen extends StatelessWidget {
-  const OrderPlacementScreen({super.key});
+  final CartController cartController = Get.find<CartController>();
+
+  OrderPlacementScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -25,11 +30,13 @@ class OrderPlacementScreen extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    '₹2000',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
+                  Obx(
+                    () => Text(
+                      '₹${cartController.totalPrice}',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                   Text(
@@ -41,7 +48,20 @@ class OrderPlacementScreen extends StatelessWidget {
                 ],
               ),
               FilledButton(
-                onPressed: () {},
+                onPressed: () {
+                  if (cartController.cartItems.isNotEmpty) {
+                    Get.snackbar(
+                      "Order Placed",
+                      "Your order has been placed successfully!",
+                    );
+                    cartController.clearCart(); // Clear cart
+                  } else {
+                    Get.snackbar(
+                      "Cart Empty",
+                      "Add items before placing an order.",
+                    );
+                  }
+                },
                 style: ButtonStyle(
                   shape: WidgetStatePropertyAll(
                     ContinuousRectangleBorder(
@@ -66,96 +86,106 @@ class OrderPlacementScreen extends StatelessWidget {
       ],
       body: Column(
         children: [
+          // Cart Item List
           Expanded(
-            child: ListView.builder(
-              itemCount: 2,
-              itemBuilder: (context, index) {
-                return Column(
-                  children: [
-                    ListTile(
-                      contentPadding:
-                          const EdgeInsets.symmetric(horizontal: 15),
-                      isThreeLine: true,
-                      leading: Container(
-                        height: 150,
-                        width: 50,
-                        decoration: BoxDecoration(
-                          border: Border.all(color: Colors.grey),
+            child: Obx(() {
+              if (cartController.cartItems.isEmpty) {
+                return Center(child: Text("Your cart is empty"));
+              }
+              return ListView.builder(
+                itemCount: cartController.cartItems.length,
+                itemBuilder: (context, index) {
+                  final productEntry =
+                      cartController.cartItems.entries.elementAt(index);
+                  final ProductModel product = productEntry.key;
+
+                  return Column(
+                    children: [
+                      ListTile(
+                        contentPadding:
+                            const EdgeInsets.symmetric(horizontal: 15),
+                        isThreeLine: true,
+                        leading: Container(
+                          height: 150,
+                          width: 50,
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.grey),
+                          ),
+                          child: Image.asset(
+                            product.image,
+                            fit: BoxFit.cover,
+                          ),
                         ),
-                        child: Image.asset(
-                          'assets/images/backpack.jpg',
-                          fit: BoxFit.cover,
+                        title: Text(
+                          product.name,
+                          maxLines: 1,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 18,
+                            overflow: TextOverflow.ellipsis,
+                          ),
                         ),
-                      ),
-                      title: Text(
-                        'Backpack',
-                        maxLines: 1,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 18,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                      subtitle: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            '₹2000',
-                            style: const TextStyle(
-                              fontWeight: FontWeight.w400,
-                              fontSize: 17,
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              '₹${product.price}',
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w400,
+                                fontSize: 17,
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 10),
-                          Row(
-                            children: [
-                              // Quantity Selector Widget
-                              Text('Quantity:'),
-                              IconButton(
-                                onPressed: () {},
-                                icon: const Icon(
-                                  Icons.remove,
-                                  size: 20,
+                            const SizedBox(height: 10),
+                            Row(
+                              children: [
+                                Text('Quantity:'),
+                                IconButton(
+                                  onPressed: () => cartController
+                                      .updateQuantity(product, -1),
+                                  icon: const Icon(
+                                    Icons.remove,
+                                    size: 20,
+                                  ),
                                 ),
-                              ),
-                              Text(
-                                '1',
-                                style: const TextStyle(
-                                  fontSize: 16,
+                                Obx(
+                                  () => Text(
+                                    '${cartController.getProductQuantity(product)}',
+                                    style: const TextStyle(fontSize: 16),
+                                  ),
                                 ),
-                              ),
-                              IconButton(
-                                onPressed: () {},
-                                icon: const Icon(
-                                  Icons.add,
-                                  size: 20,
+                                IconButton(
+                                  onPressed: () =>
+                                      cartController.updateQuantity(product, 1),
+                                  icon: const Icon(
+                                    Icons.add,
+                                    size: 20,
+                                  ),
                                 ),
-                              ),
-                              Spacer(),
-                              // Remove Item Button
-                              TextButton.icon(
-                                onPressed: () {},
-                                label: Text(
-                                  'Remove Item',
-                                ),
-                                icon: Icon(Icons.close),
-                                iconAlignment: IconAlignment.end,
-                              )
-                            ],
-                          ),
-                        ],
+                                Spacer(),
+                                // Remove Item Button
+                                TextButton.icon(
+                                  onPressed: () =>
+                                      cartController.removeFromCart(product),
+                                  label: Text('Remove Item'),
+                                  icon: Icon(Icons.close),
+                                )
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                    Container(
-                      color: Colors.grey.shade300,
-                      width: double.infinity,
-                      height: 5,
-                    ),
-                  ],
-                );
-              },
-            ),
+                      Container(
+                        color: Colors.grey.shade300,
+                        width: double.infinity,
+                        height: 5,
+                      ),
+                    ],
+                  );
+                },
+              );
+            }),
           ),
+          // Price Summary Section
           Container(
             margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
@@ -165,97 +195,76 @@ class OrderPlacementScreen extends StatelessWidget {
                 width: 0.5,
               ),
             ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  'Price Details',
-                  style: TextStyle(
-                    fontWeight: FontWeight.w700,
-                    fontSize: 20,
+            child: Obx(
+              () => Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Price Details',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w700,
+                      fontSize: 20,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 5),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text(
-                      'Total Items',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w400,
-                        fontSize: 16,
-                      ),
-                    ),
-                    Text(
-                      '2',
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w400,
-                        fontSize: 16,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 5),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text(
-                      'Total Quantity',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w400,
-                        fontSize: 16,
-                      ),
-                    ),
-                    Text(
-                      '2',
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w400,
-                        fontSize: 16,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 5),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text(
-                      'Total Product Price',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w400,
-                        fontSize: 16,
-                      ),
-                    ),
-                    Text(
-                      '₹2000',
-                      style: const TextStyle(
-                          fontWeight: FontWeight.w400,
+                  const SizedBox(height: 5),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        'Total Items',
+                        style: TextStyle(
                           fontSize: 16,
-                          color: Colors.green),
-                    ),
-                  ],
-                ),
-                const Divider(),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text(
-                      'Order Total',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 20,
+                        ),
                       ),
-                    ),
-                    Text(
-                      '₹2000',
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 20,
+                      Text(
+                        '${cartController.cartItems.length}',
+                        style: TextStyle(
+                          fontSize: 16,
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-              ],
+                    ],
+                  ),
+                  const SizedBox(height: 5),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        'Total Product Price',
+                        style: TextStyle(
+                          fontSize: 16,
+                        ),
+                      ),
+                      Text(
+                        '₹${cartController.totalPrice}',
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.deepPurple,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const Divider(),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        'Order Total',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 20,
+                        ),
+                      ),
+                      Text(
+                        '₹${cartController.totalPrice}',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 20,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ],

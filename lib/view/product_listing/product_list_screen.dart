@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:order_management/controllers/cart_controller.dart';
 import 'package:order_management/controllers/product_controller.dart';
 import 'package:order_management/view/order_placement/order_placement_screen.dart';
 import 'package:order_management/view/widgets/product_listitem.dart';
@@ -8,11 +9,13 @@ class ProductListScreen extends StatefulWidget {
   const ProductListScreen({super.key});
 
   @override
-  ProductListScreenState createState() => ProductListScreenState();
+  _ProductListScreenState createState() => _ProductListScreenState();
 }
 
-class ProductListScreenState extends State<ProductListScreen> {
+class _ProductListScreenState extends State<ProductListScreen> {
   final ProductController productController = Get.find<ProductController>();
+  final CartController cartController = Get.find<CartController>();
+
   final TextEditingController _searchController = TextEditingController();
   String _selectedFilter = 'All';
   String _selectedSort = 'None';
@@ -30,15 +33,37 @@ class ProductListScreenState extends State<ProductListScreen> {
           ),
         ),
         actions: [
-          IconButton(
-            onPressed: () {
-              Get.to(OrderPlacementScreen());
-            },
-            icon: Icon(
-              Icons.shopping_cart_checkout,
-              size: 30,
-              color: Colors.deepPurple,
-            ),
+          Stack(
+            children: [
+              IconButton(
+                onPressed: () {
+                  Get.to(() => OrderPlacementScreen()); // Navigate to cart
+                },
+                icon: Icon(
+                  Icons.shopping_cart_checkout,
+                  size: 30,
+                  color: Colors.deepPurple,
+                ),
+              ),
+              Positioned(
+                right: 5,
+                top: 5,
+                child: Obx(() {
+                  if (cartController.itemCount > 0) {
+                    return CircleAvatar(
+                      radius: 10,
+                      backgroundColor: Colors.red,
+                      child: Text(
+                        cartController.itemCount.toString(),
+                        style: TextStyle(fontSize: 12, color: Colors.white),
+                      ),
+                    );
+                  } else {
+                    return SizedBox.shrink();
+                  }
+                }),
+              ),
+            ],
           ),
           SizedBox(width: 20),
         ],
@@ -85,7 +110,7 @@ class ProductListScreenState extends State<ProductListScreen> {
                       );
                     }).toList(),
                     onChanged: (value) {
-                      setState(() => _selectedFilter = value!);
+                      _selectedFilter = value!;
                       productController.applyFilters(
                         searchQuery: _searchController.text,
                         filter: _selectedFilter,
@@ -114,7 +139,7 @@ class ProductListScreenState extends State<ProductListScreen> {
                       );
                     }).toList(),
                     onChanged: (value) {
-                      setState(() => _selectedSort = value!);
+                      _selectedSort = value!;
                       productController.applyFilters(
                         searchQuery: _searchController.text,
                         filter: _selectedFilter,
@@ -142,7 +167,9 @@ class ProductListScreenState extends State<ProductListScreen> {
                   final product = productController.filteredProducts[index];
                   return ProductListItem(
                     product: product,
-                    addToCart: () {},
+                    addToCart: () {
+                      cartController.addToCart(product); // Add product to cart
+                    },
                   );
                 },
               );
