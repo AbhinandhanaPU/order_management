@@ -1,9 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:order_management/controllers/product_controller.dart';
 import 'package:order_management/view/order_placement/order_placement_screen.dart';
 import 'package:order_management/view/widgets/product_listitem.dart';
 
-class ProductListScreen extends StatelessWidget {
+class ProductListScreen extends StatefulWidget {
   const ProductListScreen({super.key});
+
+  @override
+  ProductListScreenState createState() => ProductListScreenState();
+}
+
+class ProductListScreenState extends State<ProductListScreen> {
+  final ProductController productController = Get.find<ProductController>();
+  final TextEditingController _searchController = TextEditingController();
+  String _selectedFilter = 'All';
+  String _selectedSort = 'None';
 
   @override
   Widget build(BuildContext context) {
@@ -20,12 +32,7 @@ class ProductListScreen extends StatelessWidget {
         actions: [
           IconButton(
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => OrderPlacementScreen(),
-                ),
-              );
+              Get.to(OrderPlacementScreen());
             },
             icon: Icon(
               Icons.shopping_cart_checkout,
@@ -33,7 +40,7 @@ class ProductListScreen extends StatelessWidget {
               color: Colors.deepPurple,
             ),
           ),
-          SizedBox(width: 20)
+          SizedBox(width: 20),
         ],
       ),
       body: Column(
@@ -42,15 +49,20 @@ class ProductListScreen extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(10.0),
             child: TextField(
-              controller: TextEditingController(),
+              controller: _searchController,
               decoration: InputDecoration(
                 labelText: 'Search Product',
                 prefixIcon: Icon(Icons.search),
                 border: OutlineInputBorder(),
               ),
-              onChanged: (value) {},
+              onChanged: (value) => productController.applyFilters(
+                searchQuery: value,
+                filter: _selectedFilter,
+                sort: _selectedSort,
+              ),
             ),
           ),
+
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10.0),
             child: Row(
@@ -58,7 +70,7 @@ class ProductListScreen extends StatelessWidget {
                 // Filter Dropdown
                 Expanded(
                   child: DropdownButtonFormField<String>(
-                    value: 'All',
+                    value: _selectedFilter,
                     isExpanded: true,
                     decoration: InputDecoration(border: OutlineInputBorder()),
                     items: [
@@ -72,7 +84,14 @@ class ProductListScreen extends StatelessWidget {
                         child: Text(filter),
                       );
                     }).toList(),
-                    onChanged: (value) {},
+                    onChanged: (value) {
+                      setState(() => _selectedFilter = value!);
+                      productController.applyFilters(
+                        searchQuery: _searchController.text,
+                        filter: _selectedFilter,
+                        sort: _selectedSort,
+                      );
+                    },
                   ),
                 ),
 
@@ -81,7 +100,7 @@ class ProductListScreen extends StatelessWidget {
                 // Sorting Dropdown
                 Expanded(
                   child: DropdownButtonFormField<String>(
-                    value: 'None',
+                    value: _selectedSort,
                     isExpanded: true,
                     decoration: InputDecoration(border: OutlineInputBorder()),
                     items: [
@@ -94,7 +113,14 @@ class ProductListScreen extends StatelessWidget {
                         child: Text(sortOption),
                       );
                     }).toList(),
-                    onChanged: (value) {},
+                    onChanged: (value) {
+                      setState(() => _selectedSort = value!);
+                      productController.applyFilters(
+                        searchQuery: _searchController.text,
+                        filter: _selectedFilter,
+                        sort: _selectedSort,
+                      );
+                    },
                   ),
                 ),
               ],
@@ -103,17 +129,24 @@ class ProductListScreen extends StatelessWidget {
 
           // Product List
           Expanded(
-            child: ListView.builder(
-              itemCount: 5,
-              itemBuilder: (context, index) {
-                return ProductListItem(
-                  productImage: 'assets/images/backpack.jpg',
-                  productName: 'productName',
-                  productPrice: 2000,
-                  addToCart: () {},
-                );
-              },
-            ),
+            child: Obx(() {
+              if (productController.isLoading.value) {
+                return Center(child: CircularProgressIndicator());
+              }
+              if (productController.filteredProducts.isEmpty) {
+                return Center(child: Text("No products available"));
+              }
+              return ListView.builder(
+                itemCount: productController.filteredProducts.length,
+                itemBuilder: (context, index) {
+                  final product = productController.filteredProducts[index];
+                  return ProductListItem(
+                    product: product,
+                    addToCart: () {},
+                  );
+                },
+              );
+            }),
           ),
         ],
       ),

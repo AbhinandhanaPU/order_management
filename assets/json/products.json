@@ -1,0 +1,142 @@
+[
+    {
+        "id": "1",
+        "name": "Laptop",
+        "stock": 10,
+        "price": 50000,
+        "image": "assets/images/laptop.jpeg"
+    },
+    {
+        "id": "2",
+        "name": "Smartphone",
+        "stock": 15,
+        "price": 20000,
+        "image": "assets/images/phone.jpeg"
+    },
+    {
+        "id": "3",
+        "name": "Backpack",
+        "stock": 25,
+        "price": 2000,
+        "image": "assets/images/backpack.jpg"
+    },
+    {
+        "id": "4",
+        "name": "Wireless Headphones",
+        "stock": 8,
+        "price": 7000,
+        "image": "assets/images/headphones.jpg"
+    },
+    {
+        "id": "5",
+        "name": "Gaming Mouse",
+        "stock": 12,
+        "price": 3000,
+        "image": "assets/images/mouse.jpg"
+    },
+    {
+        "id": "6",
+        "name": "Mechanical Keyboard",
+        "stock": 7,
+        "price": 6000,
+        "image": "assets/images/keyboard.jpeg"
+    },
+    {
+        "id": "7",
+        "name": "Smart Watch",
+        "stock": 20,
+        "price": 7000,
+        "image": "assets/images/smartwatch.jpg"
+    },
+    {
+        "id": "8",
+        "name": "Tablet",
+        "stock": 5,
+        "price": 30000,
+        "image": "assets/images/tablet.png"
+    },
+    {
+        "id": "9",
+        "name": "Portable Speaker",
+        "stock": 18,
+        "price": 5000,
+        "image": "assets/images/speaker.jpg"
+    },
+    {
+        "id": "10",
+        "name": "Desk Lamp",
+        "stock": 30,
+        "price": 1500,
+        "image": "assets/images/lamp.jpeg"
+    },
+    {
+        "id": "11",
+        "name": "Office Chair",
+        "stock": 4,
+        "price": 15000,
+        "image": "assets/images/chair.jpg"
+    },
+    {
+        "id": "12",
+        "name": "External Hard Drive",
+        "stock": 10,
+        "price": 8000,
+        "image": "assets/images/hard_drive.jpg"
+    },
+    {
+        "id": "13",
+        "name": "Wireless Charger",
+        "stock": 22,
+        "price": 2500,
+        "image": "assets/images/charger.jpg"
+    },
+    {
+        "id": "14",
+        "name": "Graphic Tablet",
+        "stock": 6,
+        "price": 12000,
+        "image": "assets/images/graphic_tablet.jpg"
+    },
+    {
+        "id": "15",
+        "name": "Bluetooth Earbuds",
+        "stock": 16,
+        "price": 6000,
+        "image": "assets/images/earbuds.jpeg"
+    },
+    {
+        "id": "16",
+        "name": "VR Headset",
+        "stock": 3,
+        "price": 25000,
+        "image": "assets/images/vr_headset.jpg"
+    },
+    {
+        "id": "17",
+        "name": "Camera",
+        "stock": 8,
+        "price": 1200,
+        "image": "assets/images/camera.jpg"
+    },
+    {
+        "id": "18",
+        "name": "Tripod Stand",
+        "stock": 14,
+        "price": 3500,
+        "image": "assets/images/tripod.jpg"
+    },
+    {
+        "id": "19",
+        "name": "Microwave Oven",
+        "stock": 5,
+        "price": 12000,
+        "image": "assets/images/microwave.jpg"
+    },
+    {
+        "id": "20",
+        "name": "Air Purifier",
+        "stock": 9,
+        "price": 18000,
+        "image": "assets/images/air_purifier.jpg"
+    }
+]

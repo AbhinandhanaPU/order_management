@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:order_management/bindings/app_bindings.dart';
 import 'package:order_management/view/product_listing/product_list_screen.dart';
 
 void main() {
@@ -10,9 +12,10 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
       title: 'Order Management',
       debugShowCheckedModeBanner: false,
+      initialBinding: AppBindings(), // Inject all controllers globally
       home: ProductListScreen(),
     );
   }

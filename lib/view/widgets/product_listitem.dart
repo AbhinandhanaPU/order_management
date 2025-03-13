@@ -1,16 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:order_management/models/product_model.dart';
 
 class ProductListItem extends StatelessWidget {
-  final String productImage;
-  final String productName;
-  final int productPrice;
+  final ProductModel product;
   final VoidCallback addToCart;
 
   const ProductListItem({
     super.key,
-    required this.productImage,
-    required this.productName,
-    required this.productPrice,
+    required this.product,
     required this.addToCart,
   });
 
@@ -33,14 +30,14 @@ class ProductListItem extends StatelessWidget {
             width: double.maxFinite,
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: AssetImage(productImage),
+                image: AssetImage(product.image),
                 fit: BoxFit.fill,
               ),
             ),
           ),
           SizedBox(height: 10),
           Text(
-            productName,
+            product.name,
             style: const TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
@@ -50,7 +47,7 @@ class ProductListItem extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                '₹$productPrice',
+                '₹${product.price}',
                 style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
