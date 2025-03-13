@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:order_management/view/product_listing/product_listitem.dart';
+import 'package:order_management/view/order_placement/order_placement_screen.dart';
+import 'package:order_management/view/widgets/product_listitem.dart';
 
 class ProductListScreen extends StatelessWidget {
   const ProductListScreen({super.key});
@@ -18,7 +19,14 @@ class ProductListScreen extends StatelessWidget {
         ),
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => OrderPlacementScreen(),
+                ),
+              );
+            },
             icon: Icon(
               Icons.shopping_cart_checkout,
               size: 30,
@@ -102,7 +110,7 @@ class ProductListScreen extends StatelessWidget {
                   productImage: 'assets/images/backpack.jpg',
                   productName: 'productName',
                   productPrice: 2000,
-                  onTap: () {},
+                  addToCart: () {},
                 );
               },
             ),
