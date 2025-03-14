@@ -49,18 +49,7 @@ class OrderPlacementScreen extends StatelessWidget {
               ),
               FilledButton(
                 onPressed: () {
-                  if (cartController.cartItems.isNotEmpty) {
-                    Get.snackbar(
-                      "Order Placed",
-                      "Your order has been placed successfully!",
-                    );
-                    cartController.clearCart(); // Clear cart
-                  } else {
-                    Get.snackbar(
-                      "Cart Empty",
-                      "Add items before placing an order.",
-                    );
-                  }
+                  cartController.placeOrder(); // placing order
                 },
                 style: ButtonStyle(
                   shape: WidgetStatePropertyAll(

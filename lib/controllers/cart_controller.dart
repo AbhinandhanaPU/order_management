@@ -1,17 +1,22 @@
+import 'dart:developer';
+
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hive/hive.dart';
+import 'package:order_management/models/order_draft_model.dart';
+import 'package:order_management/models/order_item_model.dart';
+import 'package:order_management/models/order_model.dart';
 import 'package:order_management/models/product_model.dart';
 
 class CartController extends GetxController {
-  var cartItems = <ProductModel, int>{}.obs; // Map to store product & quantity
+  var cartItems = <ProductModel, int>{}.obs; // Stores product & quantity
+  final _orderDraftBox = Hive.box<OrderDraft>('orderDrafts'); // Hive Box
 
   // Adds a product to the cart or increases quantity if it already exists
   void addToCart(ProductModel product) {
-    if (cartItems.containsKey(product)) {
-      cartItems[product] = cartItems[product]! + 1;
-    } else {
-      cartItems[product] = 1;
-    }
+    cartItems[product] = 1;
+
     update();
     Get.snackbar(
       "Added to Cart",
@@ -21,6 +26,7 @@ class CartController extends GetxController {
     );
   }
 
+  // Updates product quantity
   void updateQuantity(ProductModel product, int change) {
     if (cartItems.containsKey(product)) {
       int currentQuantity = cartItems[product]!;
@@ -85,4 +91,53 @@ class CartController extends GetxController {
 
   // Gets the total number of items in the cart
   int get itemCount => cartItems.length;
+
+  // Function to Place Order or Save as Draft
+  Future<void> placeOrder() async {
+    // Check Internet Connectivity
+    var connectivityResult = await Connectivity().checkConnectivity();
+    bool isOnline = connectivityResult != ConnectivityResult.none;
+    log('isOnline $isOnline');
+
+    // check order is empty or not
+    if (cartItems.isEmpty) {
+      Get.snackbar("Cart Empty", "Please add items before placing an order.");
+      return;
+    }
+
+    Order newOrder = Order(
+      items: cartItems.entries.map((entry) {
+        return OrderItem(
+          productId: entry.key.id,
+          productName: entry.key.name,
+          quantity: entry.value,
+          price: entry.key.price.toDouble(),
+        );
+      }).toList(),
+      total: totalPrice,
+    );
+
+    if (isOnline) {
+      // Order placed online
+      Get.snackbar(
+        "Order Placed",
+        "Your order has been successfully placed!",
+        backgroundColor: Colors.green,
+        colorText: Colors.white,
+      );
+    } else {
+      // Save as Order Draft for Offline Mode
+      OrderDraft draft = OrderDraft(order: newOrder, createdAt: DateTime.now());
+      _orderDraftBox.add(draft);
+      log(draft.toString());
+      Get.snackbar(
+        "Offline Mode",
+        "No internet. Order saved as draft.",
+        backgroundColor: Colors.orange,
+        colorText: Colors.white,
+      );
+    }
+
+    clearCart();
+  }
 }
