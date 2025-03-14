@@ -17,25 +17,19 @@ class OrderItemAdapter extends TypeAdapter<OrderItem> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return OrderItem(
-      productId: fields[0] as String,
-      productName: fields[1] as String,
-      quantity: fields[2] as int,
-      price: fields[3] as double,
+      product: fields[0] as ProductModel,
+      quantity: fields[1] as int,
     );
   }
 
   @override
   void write(BinaryWriter writer, OrderItem obj) {
     writer
-      ..writeByte(4)
-      ..writeByte(0)
-      ..write(obj.productId)
-      ..writeByte(1)
-      ..write(obj.productName)
       ..writeByte(2)
-      ..write(obj.quantity)
-      ..writeByte(3)
-      ..write(obj.price);
+      ..writeByte(0)
+      ..write(obj.product)
+      ..writeByte(1)
+      ..write(obj.quantity);
   }
 
   @override

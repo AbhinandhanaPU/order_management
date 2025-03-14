@@ -1,38 +1,44 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'order_model.dart';
+part of 'product_model.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator
 // **************************************************************************
 
-class OrderAdapter extends TypeAdapter<Order> {
+class ProductModelAdapter extends TypeAdapter<ProductModel> {
   @override
-  final int typeId = 2;
+  final int typeId = 0;
 
   @override
-  Order read(BinaryReader reader) {
+  ProductModel read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return Order(
-      items: (fields[0] as List).cast<OrderItem>(),
-      total: fields[1] as double,
-      orderStatus: fields[2] as String,
+    return ProductModel(
+      id: fields[0] as String,
+      name: fields[1] as String,
+      stock: fields[2] as int,
+      price: fields[3] as int,
+      image: fields[4] as String,
     );
   }
 
   @override
-  void write(BinaryWriter writer, Order obj) {
+  void write(BinaryWriter writer, ProductModel obj) {
     writer
-      ..writeByte(3)
+      ..writeByte(5)
       ..writeByte(0)
-      ..write(obj.items)
+      ..write(obj.id)
       ..writeByte(1)
-      ..write(obj.total)
+      ..write(obj.name)
       ..writeByte(2)
-      ..write(obj.orderStatus);
+      ..write(obj.stock)
+      ..writeByte(3)
+      ..write(obj.price)
+      ..writeByte(4)
+      ..write(obj.image);
   }
 
   @override
@@ -41,7 +47,7 @@ class OrderAdapter extends TypeAdapter<Order> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is OrderAdapter &&
+      other is ProductModelAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

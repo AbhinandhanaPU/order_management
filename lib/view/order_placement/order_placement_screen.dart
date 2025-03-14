@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:order_management/controllers/cart_controller.dart';
+import 'package:order_management/controllers/order_controller.dart';
 import 'package:order_management/models/product_model.dart';
 
 class OrderPlacementScreen extends StatelessWidget {
   final CartController cartController = Get.find<CartController>();
+  final OrderController orderController = Get.find<OrderController>();
 
   OrderPlacementScreen({super.key});
 
@@ -49,7 +51,7 @@ class OrderPlacementScreen extends StatelessWidget {
               ),
               FilledButton(
                 onPressed: () {
-                  cartController.placeOrder(); // placing order
+                  orderController.placeOrder(); // placing order
                 },
                 style: ButtonStyle(
                   shape: WidgetStatePropertyAll(
