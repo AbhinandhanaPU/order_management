@@ -108,17 +108,18 @@ class CartController extends GetxController {
     Order newOrder = Order(
       items: cartItems.entries.map((entry) {
         return OrderItem(
-          productId: entry.key.id,
-          productName: entry.key.name,
+          product: entry.key,
           quantity: entry.value,
-          price: entry.key.price.toDouble(),
         );
       }).toList(),
       total: totalPrice,
+      orderStatus: isOnline ? "Pending" : "Draft",
     );
 
     if (isOnline) {
-      // Order placed online
+      OrderDraft draft = OrderDraft(order: newOrder, createdAt: DateTime.now());
+      _orderDraftBox.add(draft);
+
       Get.snackbar(
         "Order Placed",
         "Your order has been successfully placed!",
@@ -126,10 +127,9 @@ class CartController extends GetxController {
         colorText: Colors.white,
       );
     } else {
-      // Save as Order Draft for Offline Mode
       OrderDraft draft = OrderDraft(order: newOrder, createdAt: DateTime.now());
       _orderDraftBox.add(draft);
-      log(draft.toString());
+
       Get.snackbar(
         "Offline Mode",
         "No internet. Order saved as draft.",

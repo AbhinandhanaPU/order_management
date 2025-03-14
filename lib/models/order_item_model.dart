@@ -1,41 +1,31 @@
 import 'package:hive/hive.dart';
 
+import 'product_model.dart';
+
 part 'order_item_model.g.dart';
 
 @HiveType(typeId: 1)
 class OrderItem extends HiveObject {
   @HiveField(0)
-  final String productId;
+  final ProductModel product;
 
   @HiveField(1)
-  final String productName;
-
-  @HiveField(2)
   final int quantity;
 
-  @HiveField(3)
-  final double price;
-
   OrderItem({
-    required this.productId,
-    required this.productName,
+    required this.product,
     required this.quantity,
-    required this.price,
   });
 
   Map<String, dynamic> toJson() => {
-        'product_id': productId,
-        'product_name': productName,
+        'product': product.toJson(),
         'quantity': quantity,
-        'price': price,
       };
 
   factory OrderItem.fromJson(Map<String, dynamic> json) {
     return OrderItem(
-      productId: json['product_id'],
-      productName: json['product_name'],
+      product: ProductModel.fromJson(json['product']),
       quantity: json['quantity'],
-      price: json['price'],
     );
   }
 }

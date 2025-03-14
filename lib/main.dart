@@ -5,7 +5,7 @@ import 'package:order_management/bindings/app_bindings.dart';
 import 'package:order_management/models/order_draft_model.dart';
 import 'package:order_management/models/order_item_model.dart';
 import 'package:order_management/models/order_model.dart';
-import 'package:order_management/view/product_listing/product_list_screen.dart';
+import 'package:order_management/view/bottom_nav_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -33,7 +33,7 @@ class MyApp extends StatelessWidget {
       title: 'Order Management',
       debugShowCheckedModeBanner: false,
       initialBinding: AppBindings(), // Inject all controllers globally
-      home: ProductListScreen(),
+      home: BottomNavScreen(),
     );
   }
 }

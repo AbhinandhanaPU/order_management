@@ -19,17 +19,20 @@ class OrderAdapter extends TypeAdapter<Order> {
     return Order(
       items: (fields[0] as List).cast<OrderItem>(),
       total: fields[1] as double,
+      orderStatus: fields[2] as String,
     );
   }
 
   @override
   void write(BinaryWriter writer, Order obj) {
     writer
-      ..writeByte(2)
+      ..writeByte(3)
       ..writeByte(0)
       ..write(obj.items)
       ..writeByte(1)
-      ..write(obj.total);
+      ..write(obj.total)
+      ..writeByte(2)
+      ..write(obj.orderStatus);
   }
 
   @override

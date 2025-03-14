@@ -12,11 +12,19 @@ class Order extends HiveObject {
   @HiveField(1)
   final double total;
 
-  Order({required this.items, required this.total});
+  @HiveField(2)
+  String orderStatus;
+
+  Order({
+    required this.items,
+    required this.total,
+    this.orderStatus = 'Pending',
+  });
 
   Map<String, dynamic> toJson() => {
         'items': items.map((item) => item.toJson()).toList(),
         'total': total,
+        'orderStatus': orderStatus,
       };
 
   factory Order.fromJson(Map<String, dynamic> json) {
@@ -25,6 +33,7 @@ class Order extends HiveObject {
           .map((item) => OrderItem.fromJson(item))
           .toList(),
       total: json['total'],
+      orderStatus: json['orderStatus'] ?? 'Pending',
     );
   }
 }
