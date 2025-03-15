@@ -46,6 +46,6 @@ app.*.map.json
 
 # Ignore secrets and API keys
 .env
-google-services.json
-firebase_options.dart
+android/app/google-services.json-services.json
+lib/firebase_options.dart
 assets/json/service_account.json
