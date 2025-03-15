@@ -78,15 +78,15 @@ class OrderTrackingScreen extends StatelessWidget {
             Expanded(
               child: Obx(
                 () {
-                  if (orderController.orderHistory.isEmpty) {
+                  if (orderController.placedOrders.isEmpty) {
                     return Center(child: Text("No orders found"));
                   }
 
                   return ListView.separated(
-                    itemCount: orderController.orderHistory.length,
+                    itemCount: orderController.placedOrders.length,
                     separatorBuilder: (context, index) => SizedBox(height: 10),
                     itemBuilder: (context, index) {
-                      Order order = orderController.orderHistory[index].order;
+                      Order order = orderController.placedOrders[index];
 
                       return Obx(
                         () {

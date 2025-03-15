@@ -20,8 +20,9 @@ Future<void> main() async {
   Hive.registerAdapter(OrderAdapter());
   Hive.registerAdapter(OrderDraftAdapter());
 
-  // Open a Hive box for storing orders
-  await Hive.openBox<OrderDraft>('orderDrafts');
+  // Open Multiple Hive Boxes
+  await Hive.openBox<Order>('placeOrder'); // Stores placed orders
+  await Hive.openBox<OrderDraft>('orderDrafts'); // Stores draft orders
 
   runApp(const MyApp());
 }
