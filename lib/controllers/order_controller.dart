@@ -8,6 +8,7 @@ import 'package:order_management/controllers/cart_controller.dart';
 import 'package:order_management/models/order_draft_model.dart';
 import 'package:order_management/models/order_item_model.dart';
 import 'package:order_management/models/order_model.dart';
+import 'package:order_management/services/firebase_messaging_service.dart';
 import 'package:order_management/services/network_service.dart';
 
 class OrderController extends GetxController {
@@ -76,14 +77,10 @@ class OrderController extends GetxController {
 
         log("Order #$key updated to: $nextStatus");
 
-        Get.snackbar(
-          "Order Update",
-          "Your order is now: $nextStatus",
-          backgroundColor: Colors.blue,
-          colorText: Colors.white,
-          snackPosition: SnackPosition.BOTTOM,
-          duration: Duration(seconds: 3),
-        );
+        // Send FCM Notification when status is updated
+        if (nextStatus == "Approved" || nextStatus == "Shipped") {
+          MyFirebaseMessagingService.variableNotifier.value = nextStatus;
+        }
 
         loadOrders();
       }
@@ -137,6 +134,7 @@ class OrderController extends GetxController {
       Get.snackbar(
         "Order Placed",
         "Your order has been successfully placed!",
+        snackPosition: SnackPosition.BOTTOM,
         backgroundColor: Colors.blue,
         colorText: Colors.white,
       );

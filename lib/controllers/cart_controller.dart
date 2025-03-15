@@ -13,6 +13,7 @@ class CartController extends GetxController {
     Get.snackbar(
       "Added to Cart",
       "${product.name} added!",
+      snackPosition: SnackPosition.BOTTOM,
       backgroundColor: Colors.green,
       colorText: Colors.white,
     );
