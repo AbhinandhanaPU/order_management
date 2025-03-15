@@ -52,7 +52,7 @@ class MyFirebaseMessagingService {
     variableNotifier.addListener(() {
       _sendLocalNotification(
           "Order Update", "Your order is now ${variableNotifier.value}");
-      _sendPushNotification(token!, "Order Update push",
+      _sendPushNotification(token!, "Order Update",
           "Your order is now ${variableNotifier.value}");
     });
   }
